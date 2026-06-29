@@ -7,6 +7,8 @@ from models import company as company_model,job as job_model
 app=FastAPI()
 print(engine)
 
+#Base.metadata.create_all(bind=engine)
+
 Base.metadata.create_all(bind=engine)
 
 app.include_router(company.router)
