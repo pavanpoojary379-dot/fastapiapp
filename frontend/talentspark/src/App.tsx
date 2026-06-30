@@ -1,15 +1,15 @@
-import Welcome from "./components/Welcome";
+//import Welcome from "./components/Welcome";
 import NavBar from "./components/NavBar";
 import CompanyCard from "./components/CompanyCard";
 import JobCard from "./components/JobCard";
 import Footer from "./components/Footer";
 import {useEffect,useState} from 'react';
 import {getCompanies} from './Services/CompanyService';
-import{Company} from './types/company';
+import type {Company} from './types/company';
 
 function App() {
   const[loading,setLoading] = useState(true);
-  const[error,setError] = useState<string | null>(null)
+  const[error,setError] = useState<Error | null>(null)
   const[companies,setCompanies] = useState<Company[]>([]);
 
   async function fetchCompanies(){
@@ -18,7 +18,7 @@ function App() {
       const companiesData = await getCompanies();
       setCompanies(companiesData);
     }catch(error){
-      setError(error );
+    setError(error as Error);
     }finally{
       setLoading(false);
     }
@@ -39,11 +39,16 @@ function App() {
     return (
       <div>
         <NavBar />
-        <Welcome />
-        <CompanyCard key={companies.id}
-        companies={companies} />
+        {/* <Welcome /> */}
+
+
+        
+        <CompanyCard companies={companies} />
         <JobCard />
         <Footer />
       </div>
     );
   }
+
+export default App;
+
