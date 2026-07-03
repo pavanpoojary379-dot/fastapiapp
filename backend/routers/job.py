@@ -3,11 +3,12 @@ from schemas.job import JobCreate,JobUpdate,JobResponse
 from models.job import Job
 from sqlalchemy.orm import Session
 from database import get_db
+from utils.oauth2 import get_current_user, role_required
 
 router = APIRouter(prefix="/job",tags=["job"])
 
 @router.post("/",status_code=status.HTTP_201_CREATED,response_model=JobResponse)
-def create_job(job:JobCreate, db:Session=Depends(get_db)):
+def create_job(job:JobCreate, db:Session=Depends(get_db),current_user=Depends(role_required(["admin"]))):
     db_job=Job(**job.dict())
     db.add(db_job)
     db.commit()
