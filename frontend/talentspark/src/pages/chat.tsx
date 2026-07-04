@@ -50,14 +50,14 @@ function Chat() {
 
     try {
       const response = await sendChatMessage({
-        user_query: trimmed,
+        message: trimmed,
         session_id: sessionId,
       });
 
       const assistantMessage: ChatMessage = {
         id: `${Date.now()}-assistant`,
         role: "assistant",
-        content: response.response,
+        content: response.reply,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);

@@ -57,6 +57,7 @@ chat_with_memory_chain = RunnableWithMessageHistory(
 
 
 def get_chat_response(user_query: str, session_id: str = "default") -> str:
+    print(f"Session ID: {session_id}, User Query: {user_query}")
     response = chat_with_memory_chain.invoke(
         {"user_query": user_query},
         {"configurable": {"session_id": session_id}},

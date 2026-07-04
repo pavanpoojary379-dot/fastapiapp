@@ -5,10 +5,11 @@ export interface ChatMessage {
 }
 
 export interface ChatRequest {
-  user_query: string;
-  session_id?: string | null;
+  message: string;
+  session_id: string | "default";
 }
 
 export interface ChatResponse {
-  response: string;
+  reply: string;
+  session_id: string;
 }
