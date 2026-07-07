@@ -15,7 +15,7 @@ function JobCard({ jobs, companies, onAdd, onEdit, onDelete }: Props) {
         id: 0,
         title: "",
         description: "",
-        salary: "",
+        salary:"",
         company_id: companies.length > 0 ? companies[0].id : 0,
     });
 
@@ -57,19 +57,46 @@ function JobCard({ jobs, companies, onAdd, onEdit, onDelete }: Props) {
             ) : (
                 jobs.map((job) => (
                     <div key={job.id} style={{ border: "1px solid #ccc", margin: "8px 0", padding: "8px", position: "relative" }}>
-                        <div style={{ position: "absolute", right: 8, top: 8, display: "flex", gap: 6 }}>
-                            <button onClick={() => startEdit(job)} style={{ padding: "4px 8px" }}>Edit</button>
-                            <button onClick={() => handleDeleteClick(job.id)} style={{ padding: "4px 8px" }}>Delete</button>
-                        </div>
-                        <h3>{job.title}</h3>
-                        <p>{job.description}</p>
-                        <p>Salary: {job.salary}</p>
-                        <p>Company ID: {job.company_id}</p>
+                        <div
+    style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "15px",
+        borderBottom: "1px solid #e5e5e5",
+        paddingBottom: "10px"
+    }}>
+    <div>
+        <h3 style={{ margin: 0 }}>{job.title}</h3>
+        <p style={{ margin: "5px 0", color: "#666" }}>
+            {job.description}
+        </p>
+    </div>
+
+    <div style={{ display: "flex", gap: "10px" }}>
+        <button onClick={() => startEdit(job)}>
+            Edit
+        </button>
+
+        <button
+            onClick={() => handleDeleteClick(job.id)}
+            style={{
+                background: "#e53935",
+                color: "white"
+            }}>Delete
+        </button>
+    </div>
+</div>
+
+<p><strong>Salary:</strong> ₹{job.salary}</p>
+
+<p><strong>Company ID:</strong> {job.company_id}</p>
                     </div>
                 ))
             )}
-
-            <h3>Add Job</h3>
+            
+            <h2>Add Job</h2>
+            
             <input
                 type="text"
                 value={jobForm.title}
@@ -90,8 +117,7 @@ function JobCard({ jobs, companies, onAdd, onEdit, onDelete }: Props) {
             />
             <select
                 value={jobForm.company_id}
-                onChange={(e) => setJobForm({ ...jobForm, company_id: Number(e.target.value) })}
-            >
+                onChange={(e) => setJobForm({ ...jobForm, company_id: Number(e.target.value) })}>
                 {companies.map((company) => (
                     <option key={company.id} value={company.id}>
                         {company.name}

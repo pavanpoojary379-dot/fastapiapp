@@ -1,7 +1,12 @@
 import api from "./api";
-import type { ChatRequest, ChatResponse } from "../types/chat";
+import type { ChatResponse } from "../types/chat";
 
-export const sendChatMessage = async (payload: ChatRequest): Promise<ChatResponse> => {
-  const { data } = await api.post<ChatResponse>("/chat/", payload);
-  return data;
-};
+export async function askChat(message: string): Promise<string> {
+    const response = await api.post<ChatResponse>("/chat/ask", { message });
+    return response.data.response;
+}
+
+export async function askCareerChat(message: string, session_id: string): Promise<string> {
+    const response = await api.post<ChatResponse>("/chat/ask_career", { message, session_id });
+    return response.data.response;
+}
