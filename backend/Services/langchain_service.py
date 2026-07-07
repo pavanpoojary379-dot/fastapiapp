@@ -1,65 +1,44 @@
 import os
-from typing import Dict, List
 from dotenv import load_dotenv
 
-from langchain_community.chat_message_histories import ChatMessageHistory
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableWithMessageHistory
-from langchain_groq import ChatGroq
+from langchain_community.chat_message_histories import ChatMessageHistory
 
-API_KEY = os.getenv("API_KEY")
-LLAMA_MODEL = "llama-3.3-70b-versatile"
+load_dotenv()
 
-llm = ChatGroq(model=LLAMA_MODEL, groq_api_key=API_KEY)
-
-
-def chat_without_memory(query: str) -> str:
-    response = llm.invoke(query)
-    return response.content
-
-
-conversation: List[HumanMessage | AIMessage] = []
-
-
-def chat_with_memory(user_query: str) -> str:
-    conversation.append(HumanMessage(content=user_query))
-    response = llm.invoke(conversation)
-    conversation.append(AIMessage(content=response.content))
-    return response.content
-
-
-prompt_with_memory = ChatPromptTemplate.from_messages(
-    [
-        ("system", "You are a helpful assistant."),
-        ("placeholder", "{chat_history}"),
-        ("human", "{user_query}"),
-    ]
+llm = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.5,
 )
+
+prompt_with_memory = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful career guidance assistant."),
+    ("placeholder", "{chat_history}"),
+    ("human", "{user_query}")
+])
 
 chain_with_memory = prompt_with_memory | llm
 
-store: Dict[str, ChatMessageHistory] = {}
-
+store = {}
 
 def get_history(session_id: str) -> ChatMessageHistory:
     if session_id not in store:
         store[session_id] = ChatMessageHistory()
     return store[session_id]
 
-
-chat_with_memory_chain = RunnableWithMessageHistory(
+chat_with_memory = RunnableWithMessageHistory(
     runnable=chain_with_memory,
     get_session_history=get_history,
     input_messages_key="user_query",
-    message_history_key="chat_history",
+    history_messages_key="chat_history"
 )
 
-
-def get_chat_response(user_query: str, session_id: str = "default") -> str:
-    print(f"Session ID: {session_id}, User Query: {user_query}")
-    response = chat_with_memory_chain.invoke(
-        {"user_query": user_query},
-        {"configurable": {"session_id": session_id}},
+def ask_career_chatbot_response(question: str, session_id: str = "default") -> str:
+    response = chat_with_memory.invoke(
+        {"user_query": question},
+        {"configurable": {"session_id": session_id}}
     )
     return response.content
