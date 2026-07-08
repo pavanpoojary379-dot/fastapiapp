@@ -21,6 +21,7 @@ function Login({onLogin, onSwitchToRegister}: Props){
         }
     }   
     return(
+        <center>
         <form onSubmit={handleSubmit}>
             <h2>Login</h2>
             <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Email" required/>
@@ -30,6 +31,7 @@ function Login({onLogin, onSwitchToRegister}: Props){
             <button type="submit">Login</button>
             <p>Don't have an account? <button type="button" onClick={onSwitchToRegister}>Register</button></p>
         </form>
+        </center>
     )
 }
 
